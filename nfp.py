@@ -23,6 +23,8 @@ class NFP(object):
         if 'show' in kw:
             if kw["show"]==True:
                 self.showResult()
+        # 计算完成之后平移回原始位置
+        geoFunc.slideToPoint(self.sliding,self.sliding[self.locus_index],self.original_top)
 
     def main(self):
         i=0
@@ -286,6 +288,21 @@ class NFP(object):
         pltFunc.addPolygon(self.stationary)
         pltFunc.addPolygonColor(self.nfp)
         pltFunc.showPlt()
+
+    # 计算渗透深度
+    def getDepth(self):
+        '''
+        计算poly2的checkTop到NFP的距离
+        Source: https://stackoverflow.com/questions/36972537/distance-from-point-to-polygon-when-inside
+        '''
+        d1=Polygon(self.nfp).distance(Point(self.original_top))
+        # if point in inside polygon, d1=0
+        # d2: distance from the point to nearest boundary
+        if d1==0:
+            d2=Polygon(self.nfp).boundary.distance(Point(self.original_top))
+            # print('d2:',d2)
+            return d2
+        else: return 0
 
 # 计算NFP然后寻找最合适位置
 def tryNFP():

@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 
 class pltFunc(object):
-    
     def addPolygon(poly):
         for i in range(0,len(poly)):
             if i == len(poly)-1:
@@ -28,3 +27,7 @@ class pltFunc(object):
         else:
             plt.axis([0,2000,0,2000])
         plt.show()
+
+    def saveFig(name):
+        plt.savefig('figs\\'+name+'.jpg')
+        plt.cla()

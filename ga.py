@@ -14,7 +14,7 @@ class Poly:
 
 # 适配程度，用于进化选择
 def Fitness(sequence):
-    pp=GravityLowestAlgorithm(sequence)
+    pp=GravityLowestAlgorithm(sequence).start()
     fitness=1000/float(pp.contain_height) # 选择倒数
     return fitness
 

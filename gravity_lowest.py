@@ -8,6 +8,8 @@ class GravityLowestAlgorithm(object):
         self.width=2000
         self.height=15000
         self.polygons=polygons
+
+    def start(self):
         # self.storeOrginal()
         # print(polygons)
         self.placeFirstPoly()
@@ -138,7 +140,7 @@ class GravityLowestAlgorithm(object):
         
         move_x=poly[left_index][0]
         move_y=poly[top_index][1]
-        new_poly=geoFunc.getSlide(poly,[-move_x,-move_y])
+        new_poly=geoFunc.getSlide(poly,-move_x,-move_y)
 
         refer_pt=[new_poly[poly_index][0],new_poly[poly_index][1]]
         width=self.width-new_poly[right_index][0]
@@ -157,4 +159,4 @@ class GravityLowestAlgorithm(object):
                 ver[1]=ver[1]*num
 
 if __name__ == '__main__':
-    GravityLowestAlgorithm(getData())
+    GravityLowestAlgorithm(getData()).start()
