@@ -22,13 +22,13 @@ class GCS(object):
         self.r_inc = 0.1  # 矩形长度增加百分比
         self.W = 1500  # 矩形宽度（固定值）
         self.n_c = 20  # 每代布谷鸟的个数
-        self.n_mo = 50  # MinimizeOverlap的最大迭代次数
-        self.maxGen = 100  # max generations
+        self.n_mo = 20  # MinimizeOverlap的最大迭代次数
+        self.maxGen = 10  # max generations
         self.penalty = np.ones((self.n_polys, self.n_polys))  # penalty weight
         self.depth = np.zeros((self.n_polys, self.n_polys))  # 渗透深度
         self.percentage = 0.5  # 每次迭代时遗弃的巢的比例
         self.bestF = 999999  # 当前最优解
-        print('GCS init: ', self.n_polys, ' polygons')
+        print('GCS init:', self.n_polys, 'polygons')
 
     def GuidedCuckooSearch(self, H, N):
         '''
@@ -44,14 +44,17 @@ class GCS(object):
             if it < self.n_mo:  # 可行解
                 H_best = self.H
                 self.H = (1-self.r_dec)*self.H
+                print('H--: ', self.H)
             else:
                 # 不可行解 还原之前的解
                 self.polygons = original_polygons
                 self.H = (1+self.r_inc)*self.H
+                print('H++: ', self.H)
             n_cur = n_cur+1
+            self.showAll()
         return H_best
 
-    def CuckooSearch(self, poly_id, ori, L):
+    def CuckooSearch(self, poly_id, ori=''):
         '''
         poly_id: 当前多边形index
         ori: 允许旋转的角度
@@ -106,6 +109,8 @@ class GCS(object):
                         newCuckooFlag = True
                 self.evaluate(poly_id, c_new, ori)
                 cuckoos[i] = c_new
+                if c_new.getF()==0:
+                    break
                 newi = newi+1
             cuckoos.sort(key=lambda x: x.getF(), reverse=False)
             bestCuckoo = cuckoos[0]
@@ -124,26 +129,28 @@ class GCS(object):
         v: 多边形位置 实际已通过self.polygons得到
         o: 旋转的角度 后期可考虑把多边形封装成类
         '''
-        self.penalty = 1.0
-        n_polys=self.n_polys
+        n_polys = self.n_polys
         it = 0
         fitness = 999999
         while it < self.n_mo:
-            Q=np.random.permutation(range(n_polys))
+            Q = np.random.permutation(range(n_polys))
             for i in range(n_polys):
                 curPoly = self.polygons[Q[i]]
                 # 记录原始位置
                 top_index = geoFunc.checkTop(curPoly)
                 top = list(curPoly[top_index])
                 F = self.evaluate(Q[i])  # 以后考虑旋转
+                print('F of',Q[i],':',F)
                 v_i = self.CuckooSearch(Q[i])
-                F_new = self.evaluate(Q[i], v_i)
+                self.evaluate(Q[i], v_i)
+                F_new = v_i.getF()
+                print('new F of',Q[i],':',F)
                 if F_new < F:
-                    print('Poly', Q[i], v_i.getXY())
+                    print('polygon', Q[i], v_i.getXY())
                 else:
                     # 平移回原位置
                     geoFunc.slideToPoint(curPoly, curPoly[top_index], top)
-            fitness_new = self.evaluateAll(fitness)
+            fitness_new = self.evaluateAll()
             if fitness_new == 0:
                 return it  # 可行解
             elif fitness_new < fitness:
@@ -195,12 +202,12 @@ class GCS(object):
                 choiceY.append(Levy_y[i])
         return Levy_x, Levy_y
 
-    def evaluate(self, poly_id, cuckoo=None, **ori):
+    def evaluate(self, poly_id, cuckoo=None, ori=None):
         F = 0
         poly = self.polygons[poly_id]
         for p in range(self.n_polys):
             # 将当前多边形的Top平移到cuckoo处
-            if cuckoo:
+            if cuckoo != None:
                 cuckoo.slidePolytoMe(poly)
             if self.polygons[p] == poly:
                 continue
@@ -214,17 +221,14 @@ class GCS(object):
         else:
             return F
 
-    def evaluateAll(self, fitness):
-        '''
-        fitness: MinimizeOverlap中当前最优F
-        '''
+    def evaluateAll(self):
         F = 0
         for i in range(self.n_polys):
             for j in range(i+1, self.n_polys):
                 depth = self.getDepth(self.polygons[i], self.polygons[j], 0, 0)
                 self.depth[i][j] = depth
                 self.depth[j][i] = depth
-                F = F+depth*self.penalty
+                F = F+depth*self.penalty[i][j]
         print('all_F:', F)
         return F
 
@@ -302,7 +306,10 @@ class Test():
         return gcs.getDepth(poly1, poly3, 0, 0)
 
     def testGCS(self):
-        polygons = self.getTestPolys()
+        # polygons=[]
+        # polygons.append(self.getTestPolys()[0])
+        # polygons.append(self.getTestPolys()[1])
+        polygons=self.getTestPolys()
         num = 1  # 形状收缩
         for poly in polygons:
             for ver in poly:
@@ -311,7 +318,7 @@ class Test():
         gcs = GCS(polygons)
         geoFunc.slidePoly(polygons[0], 500, 500)
         gcs.showAll()
-        gcs.GuidedCuckooSearch(1500,10)
+        gcs.GuidedCuckooSearch(1500, 10)
         gcs.showAll()
 
     def testLevy(self):
