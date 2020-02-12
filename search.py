@@ -1,5 +1,8 @@
 '''
     Guided Cuckoo Search (GCS) 
+    ---
+    待优化：
+        如果两个多边形没有移动则无需重新计算深度
 '''
 import math
 import random
@@ -13,109 +16,142 @@ from gravity_lowest import GravityLowestAlgorithm
 
 class GCS(object):
     def __init__(self, polygons):
-        self.r_dec = 0.01  # 矩形长度减少百分比
-        self.r_inc = 0.01  # 矩形长度增加百分比
+        self.polygons = polygons  # 初始解
+        self.n_polys = len(self.polygons)
+        self.r_dec = 0.1  # 矩形长度减少百分比
+        self.r_inc = 0.1  # 矩形长度增加百分比
         self.W = 1500  # 矩形宽度（固定值）
-        self.H = 1500  # 矩形高度
         self.n_c = 20  # 每代布谷鸟的个数
+        self.n_mo = 50  # MinimizeOverlap的最大迭代次数
         self.maxGen = 100  # max generations
-        self.penalty = 1.0  # penalty weight
+        self.penalty = np.ones((self.n_polys, self.n_polys))  # penalty weight
+        self.depth = np.zeros((self.n_polys, self.n_polys))  # 渗透深度
         self.percentage = 0.5  # 每次迭代时遗弃的巢的比例
-        self.polygons = polygons
         self.bestF = 999999  # 当前最优解
-        print('初始化GCS类')
+        print('GCS init: ', self.n_polys, ' polygons')
 
-    def GuidedCuckooSearch(self, L, N):
+    def GuidedCuckooSearch(self, H, N):
         '''
-        L: 初始矩形长度
+        H: 初始矩形高度
         N: 迭代次数限制
         '''
-        v1, o1 = 0, 0  # 待引入初始解
-        v_best, o_best = v1, o1
-        v_cur, o_cur = v1, o1
-        L_best = L
+        self.H = H
+        H_best = self.H
         n_cur = 0
         while n_cur <= N:
-            v_cur, o_cur, feasible = 0, 0, True  # MinimizeOverlap()
-            if feasible:
-                v_best, o_best = v_cur, o_cur
-                L_best = L
-                L = (1-self.r_dec)*L
+            original_polygons = list(self.polygons)  # 备份当前解
+            it = self.MinimizeOverlap(0, 0, 0)
+            if it < self.n_mo:  # 可行解
+                H_best = self.H
+                self.H = (1-self.r_dec)*self.H
             else:
-                L = (1+self.r_inc)*L
+                # 不可行解 还原之前的解
+                self.polygons = original_polygons
+                self.H = (1+self.r_inc)*self.H
             n_cur = n_cur+1
-        return v_best, o_best, L_best
+        return H_best
 
-    def CuckooSearch(self, poly, ori, L):
+    def CuckooSearch(self, poly_id, ori, L):
         '''
-        poly: 当前多边形
+        poly_id: 当前多边形index
         ori: 允许旋转的角度
         '''
         cuckoos = []
+        poly = self.polygons[poly_id]
         GL_Algo = GravityLowestAlgorithm(None)
         R = GL_Algo.getInnerFitRectangleNew(poly)  # 为当前多边形计算inner-fit矩形
         i = 0
         while i < self.n_c:  # 产生初始种群
             c = Cuckoo(R)
-            if self.censorCuckoo(c)==False:
+            if self.censorCuckoo(c) == False:
                 continue
             cuckoos.append(c)
             print(c.getXY())
             i = i+1
-        bestPosition = cuckoos[0]
+        bestCuckoo = cuckoos[0]
         t = 0
         while t < self.maxGen:  # 开始搜索
             c_i = random.choice(cuckoos)
             # 通过Levy飞行产生解
-            newCuckooFlag=False
-            while newCuckooFlag==False:
-                newX, newY = self.getCuckoos_Levy(1, bestPosition)
+            newCuckooFlag = False
+            while newCuckooFlag == False:
+                newX, newY = self.getCuckoos_Levy(1, bestCuckoo)
                 c_i.setXY(newX[0], newY[0])
                 if self.censorCuckoo(c_i):
-                    newCuckooFlag=True
-            self.evaluate(poly, c_i, ori)
+                    newCuckooFlag = True
+            self.evaluate(poly_id, c_i, ori)
             c_j = random.choice(cuckoos)
-            self.evaluate(poly, c_j, ori)
+            self.evaluate(poly_id, c_j, ori)
             if c_i.getF() < c_j.getF():
                 c_j = c_i
-                bestPosition = c_j
+                bestCuckoo = c_j
             # 丢弃一部分最坏的巢并在新位置建立新巢
             cuckoos.sort(key=lambda x: x.getF(), reverse=True)
             newX, newY = self.getCuckoos_Levy(
-                int(self.percentage*len(cuckoos))+1, bestPosition)
+                int(self.percentage*len(cuckoos))+1, bestCuckoo)
             newi = 0
             for i in range(int(len(cuckoos)*self.percentage)):
                 print('----- 第', str(t+1), '代 // 第', str(i+1), '只 ----')
                 if newi >= len(newX):
                     break
                 c_new = Cuckoo(R)
-                newCuckooFlag=False
-                while newCuckooFlag==False:
+                newCuckooFlag = False
+                while newCuckooFlag == False:
                     c_new.setXY(newX[newi], newY[newi])
-                    if self.censorCuckoo(c_new)==False:
-                        newX, newY = self.getCuckoos_Levy(int(self.percentage*len(cuckoos))+1, bestPosition)
+                    if self.censorCuckoo(c_new) == False:
+                        newX, newY = self.getCuckoos_Levy(
+                            int(self.percentage*len(cuckoos))+1, bestCuckoo)
                         newi = 0
                     else:
-                        newCuckooFlag=True
-                self.evaluate(poly, c_new, ori)
+                        newCuckooFlag = True
+                self.evaluate(poly_id, c_new, ori)
                 cuckoos[i] = c_new
                 newi = newi+1
             cuckoos.sort(key=lambda x: x.getF(), reverse=False)
-            bestPosition = cuckoos[0]
-            bestPosition.slidePolytoMe(poly)
-            print(bestPosition.getF(), bestPosition.getXY())
-            self.bestF = bestPosition.getF()
-            for i in range(0, len(self.polygons)):
+            bestCuckoo = cuckoos[0]
+            bestCuckoo.slidePolytoMe(poly)
+            print(bestCuckoo.getF(), bestCuckoo.getXY())
+            self.bestF = bestCuckoo.getF()
+            for i in range(0, self.n_polys):
                 pltFunc.addPolygon(self.polygons[i])
             t = t+1
             pltFunc.saveFig(str(t))
-        return bestPosition
+        return bestCuckoo
 
-    def MinimizeOverlap(self, polys, oris, L, v, o):
+    def MinimizeOverlap(self, oris, v, o):
         '''
-        Polys: 多边形集合
-        Oris: 允许旋转的角度集合
+        oris: 允许旋转的角度集合
+        v: 多边形位置 实际已通过self.polygons得到
+        o: 旋转的角度 后期可考虑把多边形封装成类
         '''
+        self.penalty = 1.0
+        n_polys=self.n_polys
+        it = 0
+        fitness = 999999
+        while it < self.n_mo:
+            Q=np.random.permutation(range(n_polys))
+            for i in range(n_polys):
+                curPoly = self.polygons[Q[i]]
+                # 记录原始位置
+                top_index = geoFunc.checkTop(curPoly)
+                top = list(curPoly[top_index])
+                F = self.evaluate(Q[i])  # 以后考虑旋转
+                v_i = self.CuckooSearch(Q[i])
+                F_new = self.evaluate(Q[i], v_i)
+                if F_new < F:
+                    print('Poly', Q[i], v_i.getXY())
+                else:
+                    # 平移回原位置
+                    geoFunc.slideToPoint(curPoly, curPoly[top_index], top)
+            fitness_new = self.evaluateAll(fitness)
+            if fitness_new == 0:
+                return it  # 可行解
+            elif fitness_new < fitness:
+                fitness = fitness_new
+                it = 0
+            self.updatePenalty()
+            it = it+1
+        return it
 
     def getCuckoos_Levy(self, num, best):
         # Levy flights
@@ -159,18 +195,38 @@ class GCS(object):
                 choiceY.append(Levy_y[i])
         return Levy_x, Levy_y
 
-    def evaluate(self, poly, cuckoo, ori):
+    def evaluate(self, poly_id, cuckoo=None, **ori):
         F = 0
-        for p in self.polygons:
+        poly = self.polygons[poly_id]
+        for p in range(self.n_polys):
             # 将当前多边形的Top平移到cuckoo处
-            cuckoo.slidePolytoMe(poly)
-            if p == poly:
+            if cuckoo:
+                cuckoo.slidePolytoMe(poly)
+            if self.polygons[p] == poly:
                 continue
-            F = F+self.getDepth(p, poly, 0, 0)*self.penalty
+            F = F+self.getDepth(self.polygons[p],
+                                poly, 0, 0)*self.penalty[p][poly_id]
             if F > self.bestF:
                 break
-        cuckoo.setF(F)
         print('F:', F)
+        if cuckoo:
+            cuckoo.setF(F)
+        else:
+            return F
+
+    def evaluateAll(self, fitness):
+        '''
+        fitness: MinimizeOverlap中当前最优F
+        '''
+        F = 0
+        for i in range(self.n_polys):
+            for j in range(i+1, self.n_polys):
+                depth = self.getDepth(self.polygons[i], self.polygons[j], 0, 0)
+                self.depth[i][j] = depth
+                self.depth[j][i] = depth
+                F = F+depth*self.penalty
+        print('all_F:', F)
+        return F
 
     def getDepth(self, poly1, poly2, ori1, ori2):
         '''
@@ -181,16 +237,26 @@ class GCS(object):
         return NFP(poly1, poly2).getDepth()
 
     def showAll(self):
-        for i in range(0, len(self.polygons)):
+        for i in range(0, self.n_polys):
             pltFunc.addPolygon(self.polygons[i])
         pltFunc.showPlt()
 
+    def updatePenalty(self):
+        depth_max = self.depth.max()
+        for i in range(self.n_polys):
+            for j in range(self.n_polys):
+                if i == j:
+                    continue
+                self.penalty[i][j] = self.penalty[i][j] + \
+                    self.depth[i][j]/depth_max
+
     # 检查布谷鸟是否飞出边界
-    def censorCuckoo(self,c):
+    def censorCuckoo(self, c):
         if c.getXY()[0] > self.W or c.getXY()[1] > self.H or c.getXY()[0] < 0 or c.getXY()[1] < 0:
             return False
         else:
             return True
+
 
 class Cuckoo(object):
     def __init__(self, IFR):
@@ -235,7 +301,7 @@ class Test():
             900.0, 500.0], [875.0, 592.0], [700.0, 571.5], [525.0, 592.0]]
         return gcs.getDepth(poly1, poly3, 0, 0)
 
-    def testCuckooSearch(self):
+    def testGCS(self):
         polygons = self.getTestPolys()
         num = 1  # 形状收缩
         for poly in polygons:
@@ -245,7 +311,7 @@ class Test():
         gcs = GCS(polygons)
         geoFunc.slidePoly(polygons[0], 500, 500)
         gcs.showAll()
-        gcs.CuckooSearch(polygons[0], 0, 0)
+        gcs.GuidedCuckooSearch(1500,10)
         gcs.showAll()
 
     def testLevy(self):
@@ -259,5 +325,5 @@ class Test():
         plt.show()
 
 
-Test().testCuckooSearch()
+Test().testGCS()
 # Test().testLevy()
