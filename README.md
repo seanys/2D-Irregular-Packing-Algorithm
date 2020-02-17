@@ -6,6 +6,8 @@ Realize 2D irregular packing algorithm in python
 
 使用的形状数据：https://www.euro-online.org/websites/esicup/data-sets/
 
+作者：[羊山](https://seanys.github.io/about/)、[王子路](https://github.com/Prinway) From 同济大学管理科学与工程系
+
 ### No-Fit Polygon
 
 参考文献：Burke E K, Hellier R S R, Kendall G, et al. Complete and robust no-fit polygon generation for the irregular stock cutting problem[J]. European Journal of Operational Research, 2007, 179(1): 27-49.
