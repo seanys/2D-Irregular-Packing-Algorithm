@@ -29,7 +29,7 @@ class NFP(object):
             if kw["show"]==True:
                 self.showResult()
         # 计算完成之后平移回原始位置
-        geoFunc.slideToPoint(self.sliding,self.sliding[self.locus_index],self.original_top)
+        GeoFunc.slideToPoint(self.sliding,self.sliding[self.locus_index],self.original_top)
 
     def main(self):
         i=0
@@ -80,16 +80,10 @@ class NFP(object):
     def detectTouching(self):
         touch_edges=[]
         stationary_edges,sliding_edges=self.getAllEdges()
-        # print(stationary_edges)
-        # print(sliding_edges)
         for edge1 in stationary_edges:
             for edge2 in sliding_edges:
                 inter=GeoFunc.intersection(edge1,edge2)
                 if inter!=[]:
-                    # print("edge1:",edge1)
-                    # print("edge2:",edge2)
-                    # print("inter:",inter)
-                    # print("")
                     pt=[inter[0],inter[1]] # 交叉点
                     edge1_bound=(GeoFunc.almostEqual(edge1[0],pt) or GeoFunc.almostEqual(edge1[1],pt)) # 是否为边界
                     edge2_bound=(GeoFunc.almostEqual(edge2[0],pt) or GeoFunc.almostEqual(edge2[1],pt)) # 是否为边界
@@ -186,13 +180,6 @@ class NFP(object):
                 vector12_product=GeoFunc.crossProduct(vector1,vector2) # 叉积，大于0在左侧，小于0在右侧，等于0平行
                 vector_vector1_product=GeoFunc.crossProduct(vector1,vector) # 叉积，大于0在左侧，小于0在右侧，等于0平行
                 vector_vector2_product=GeoFunc.crossProduct(vector2,vector) # 叉积，大于0在左侧，小于0在右侧，等于0平行
-                # print("vector:",vector)
-                # print("type:",touching["type"])
-                # print("vector12_product:",vector12_product)
-                # print("vector1:",vector1)
-                # print("vector2:",vector2)
-                # print("vector_vector1_product:",vector_vector1_product)
-                # print("vector_vector2_product:",vector_vector2_product)
                 # 最后两种情况
                 if touching["type"]==4 and (vector_vector1_product*vector12_product)<0:
                     feasible=False
@@ -208,8 +195,6 @@ class NFP(object):
                 # 平行情况，需要用原值逐一判断
                 if vector12_product==0:
                     inter=GeoFunc.newLineInter(touching["edge1"],touching["edge2"])
-                    # print("inter['geom_type']:",inter["geom_type"])
-                    # print(inter)
                     if inter["geom_type"]=="LineString":
                         if inter["length"]>0.01:
                             # 如果有相交，则需要在左侧
@@ -220,11 +205,6 @@ class NFP(object):
                         if touching["orbiting_start"]==True != touching["stationary_start"]==False and vector_vector1_product==0:
                             if touching["vector1"][0]*vector[0]>0: # 即方向相同
                                 feasible=False
-            #     if feasible==False:
-            #         print("feasible:",False)
-            #     print("")                     
-            # print("feasible:",feasible)
-            # print("")
             if feasible==True:
                 res_vector=vector
                 break
@@ -243,12 +223,7 @@ class NFP(object):
                 if inter.geom_type=="Point":
                     inter_mapping=mapping(inter)
                     inter_coor=inter_mapping["coordinates"]
-                    # if (end_pt[0]!=inter_coor[0] or end_pt[1]!=inter_coor[1]) and (pt[0]!=inter_coor[0] or pt[1]!=inter_coor[1]):
                     if (abs(end_pt[0]-inter_coor[0])>0.01 or abs(end_pt[1]-inter_coor[1])>0.01) and (abs(pt[0]-inter_coor[0])>0.01 or abs(pt[1]-inter_coor[1])>0.01):
-                        # print("start:",pt)
-                        # print("end:",end_pt)
-                        # print("inter:",inter)
-                        # print("")
                         new_vectors.append([inter_coor[0]-pt[0],inter_coor[1]-pt[1]])
 
         for pt in self.stationary:
@@ -260,12 +235,7 @@ class NFP(object):
                 if inter.geom_type=="Point":
                     inter_mapping=mapping(inter)
                     inter_coor=inter_mapping["coordinates"]
-                    # if (end_pt[0]!=inter_coor[0] or end_pt[1]!=inter_coor[1]) and (pt[0]!=inter_coor[0] or pt[1]!=inter_coor[1]):
                     if (abs(end_pt[0]-inter_coor[0])>0.01 or abs(end_pt[1]-inter_coor[1])>0.01) and (abs(pt[0]-inter_coor[0])>0.01 or abs(pt[1]-inter_coor[1])>0.01):
-                        # print("start:",pt)
-                        # print("end:",end_pt)
-                        # print("inter:",inter)
-                        # print("")
                         new_vectors.append([pt[0]-inter_coor[0],pt[1]-inter_coor[1]])
         
         # print(new_vectors)

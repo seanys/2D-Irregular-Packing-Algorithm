@@ -1,6 +1,4 @@
-# 2D-Irregular-Packing-Algorithm （）
-
-Realize 2D irregular packing algorithm in python
+# 2D-Irregular-Packing-Algorithm
 
 ## 基础
 

@@ -8,7 +8,7 @@ def tryNFP():
     df = pd.read_csv("data/blaz1.csv")
 
     poly1=json.loads(df['polygon'][1])
-    poly2=json.loads(df['polygon'][2])
+    poly2=json.loads(df['polygon'][4])
     GeoFunc.normData(poly1,50)
     GeoFunc.normData(poly2,50)
     GeoFunc.slidePoly(poly1,500,500)

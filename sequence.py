@@ -26,7 +26,7 @@ def packingLength(poly_list,history_index_list,history_length_list,width,**kw):
         try:
             if 'NFPAssistant' in kw:
                 blf=BottomLeftFill(width,polys,NFPAssistant=kw['NFPAssistant'])
-                blf.showAll()
+                # blf.showAll()
                 length=blf.contain_length
             else:
                 length=BottomLeftFill(width,polys).contain_length
@@ -41,7 +41,7 @@ class GA(object):
     '''
     参考文献：A 2-exchange heuristic for nesting problems 2002
     '''
-    def __init__(self,width,poly_list,nfp_asst=None,generations=3,pop_size=20):
+    def __init__(self,width,poly_list,nfp_asst=None,generations=10,pop_size=20):
         self.width=width
         self.minimal_rotation=360 # 最小的旋转角度
         self.poly_list=poly_list
@@ -299,15 +299,13 @@ class SA(object):
 if __name__=='__main__':
     starttime = datetime.datetime.now()
 
-    polys=getData(6)
+    polys = getData(6)
+    all_rotation = [0] # 禁止旋转
+    poly_list = PolyListProcessor.getPolyObjectList(polys, all_rotation)
 
-    poly_list=PolyListProcessor.getPolyObjectList(polys+polys+polys,[0])
-
-    nfp_assistant=NFPAssistant(polys,store_nfp=False,get_all_nfp=True,load_history=True)
+    nfp_assistant=NFPAssistant(polys, store_nfp=False, get_all_nfp=True, load_history=True)
 
     GA(760,poly_list,nfp_asst=nfp_assistant)
-
-    # SA(poly_list)
 
     endtime = datetime.datetime.now()
     print (endtime - starttime)

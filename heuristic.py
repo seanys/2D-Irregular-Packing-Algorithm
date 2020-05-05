@@ -28,24 +28,18 @@ class BottomLeftFill(object):
         self.length=150000 # 代表长度
         self.contain_length=2000
         self.polygons=original_polygons
-        self.placeFirstPoly()
         self.NFPAssistant=None
         if 'NFPAssistant' in kw:
             self.NFPAssistant=kw["NFPAssistant"]
-        # else:
-        #     # 若未指定外部NFPasst则内部使用NFPasst开多进程
-        #     self.NFPAssistant=packing.NFPAssistant(self.polygons,fast=True)
         self.vertical=False
         if 'vertical' in kw:
-                self.vertical=kw['vertical']
-        if 'rectangle' in kw:
-            self.rectangle=True
-        else:
-            self.rectangle=False
-
+            self.vertical=kw['vertical']
+        
+        print("Total Num:", len(original_polygons))
+        self.placeFirstPoly()
         for i in range(1,len(self.polygons)):
             print("############################## Place the ",i+1,"th shape #################################")
-            self.showAll()
+            # self.showAll()
             self.placePoly(i)
         
         self.getLength()
@@ -68,7 +62,7 @@ class BottomLeftFill(object):
         for main_index in range(0,index):
             main=self.polygons[main_index]
             if self.NFPAssistant==None:
-                nfp=NFP(main,adjoin,rectangle=self.rectangle).nfp
+                nfp=NFP(main,adjoin).nfp
             else:
                 nfp=self.NFPAssistant.getDirectNFP(main,adjoin)
             nfp_poly=Polygon(nfp)
@@ -277,9 +271,12 @@ if __name__=='__main__':
     # index from 0-15
     index=6
     polys=getData(index)
-    nfp_ass=packing.NFPAssistant(polys,store_nfp=False,get_all_nfp=True,load_history=True)
+    nfp_ass=packing.NFPAssistant(polys,store_nfp=True,get_all_nfp=True,load_history=False)
+    # nfp_ass=packing.NFPAssistant(polys,store_nfp=False,get_all_nfp=True,load_history=True)
+    # nfp_ass=packing.NFPAssistant(polys,store_nfp=False,get_all_nfp=False,load_history=False)
 
     starttime = datetime.datetime.now()
+    # bfl=BottomLeftFill(2000,polys,vertical=False)
     bfl=BottomLeftFill(760,polys,vertical=False,NFPAssistant=nfp_ass)
     
     endtime = datetime.datetime.now()

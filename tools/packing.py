@@ -612,7 +612,7 @@ class NFPAssistant(object):
     
     def storeNFP(self):
         if self.store_path==None:
-            path="/Users/sean/Documents/Projects/Packing-Algorithm/record/nfp.csv"
+            path="record/nfp.csv"
         else:
             path=self.store_path
         with open(path,"a+") as csvfile:
