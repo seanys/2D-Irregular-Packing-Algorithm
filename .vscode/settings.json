@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Program Files\\Python\\python.exe",
+    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.linting.banditEnabled": false
