@@ -28,6 +28,8 @@ class NFP(object):
         if 'show' in kw:
             if kw["show"]==True:
                 self.showResult()
+        # 计算完成之后平移回原始位置
+        geoFunc.slideToPoint(self.sliding,self.sliding[self.locus_index],self.original_top)
 
     def main(self):
         i=0
