@@ -1,10 +1,27 @@
 from shapely.geometry import Polygon,Point,mapping,LineString
+from shapely.ops import unary_union
+from shapely import affinity
+import pyclipper 
+import math
 import numpy as np
+import pandas as pd
+import json
+import matplotlib.pyplot as plt
+import csv
+import time
+import logging
+import random
+import copy
+import os
 
 bias=0.00001 # 计算精度偏差
 
-class geoFunc(object):
-    '''近似计算'''
+class GeoFunc(object):
+    '''
+    几何相关函数
+    1. checkBottom、checkTop、checkLeft、checkRight暂时不考虑多个点
+    2. checkBottom和checkLeft均考虑最左下角
+    '''
     def almostContain(line,point):
         # 会由于int导致计算偏差！！！！！！
         pt1=[line[0][0],line[0][1]]
@@ -42,14 +59,17 @@ class geoFunc(object):
         else:
             return False
     
-    def computeInterArea(inter):
+    def computeInterArea(orginal_inter):
         '''
         计算相交区域的面积
         '''
+        inter=mapping(orginal_inter)
         # 一个多边形
         if inter["type"]=="Polygon":
-            poly=inter["coordinates"][0]
-            return Polygon(poly).area
+            if len(inter["coordinates"])>0:
+                poly=inter["coordinates"][0]
+                return Polygon(poly).area
+            else: return 0
         if inter["type"]=="MultiPolygon":
             area=0
             for _arr in inter["coordinates"]:
@@ -65,17 +85,6 @@ class geoFunc(object):
                     area=area+Polygon(poly).area
             return area
         return 0
-
-    def getPloyEdges(poly):
-        edges=[]
-        for index,point in enumerate(poly):
-            if index < len(poly)-1:
-                if poly[index]!=poly[index+1]: # 排除情况
-                    edges.append([poly[index],poly[index+1]])
-            else:
-                if poly[index]!=poly[0]: # 排除情况
-                    edges.append([poly[index],poly[0]])
-        return edges
 
     def checkBottom(poly):
         polyP=Polygon(poly)
@@ -106,10 +115,38 @@ class geoFunc(object):
                 return index
 
     def checkBound(poly):
-        return geoFunc.checkLeft(poly), geoFunc.checkBottom(poly), geoFunc.checkRight(poly), geoFunc.checkTop(poly)
+        return GeoFunc.checkLeft(poly), GeoFunc.checkBottom(poly), GeoFunc.checkRight(poly), GeoFunc.checkTop(poly)
     
+    def checkBoundPt(poly):
+        '''获得边界的点'''
+        left,bottom,right,top=poly[0],poly[0],poly[0],poly[0]
+        for i,pt in enumerate(poly):
+            if pt[0]<left[0]:
+                left=pt
+            if pt[0]>right[0]:
+                right=pt
+            if pt[1]>top[1]:
+                top=pt
+            if pt[1]<bottom[1]:
+                bottom=pt
+        return left,bottom,right,top
+
+    def checkBoundValue(poly):
+        '''获得边界的值'''
+        left,bottom,right,top=poly[0][0],poly[0][1],poly[0][0],poly[0][1]
+        for i,pt in enumerate(poly):
+            if pt[0]<left:
+                left=pt[0]
+            if pt[0]>right:
+                right=pt[0]
+            if pt[1]>top:
+                top=pt[1]
+            if pt[1]<bottom:
+                bottom=pt[1]
+        return left,bottom,right,top
+
     def slideToPoint(poly,pt1,pt2):
-        geoFunc.slidePoly(poly,pt2[0]-pt1[0],pt2[1]-pt1[1])
+        GeoFunc.slidePoly(poly,pt2[0]-pt1[0],pt2[1]-pt1[1])
 
     def getSlide(poly,x,y):
         '''
@@ -133,11 +170,20 @@ class geoFunc(object):
             for poly in res["coordinates"]:
                 for point in poly[0]:
                     _arr.append([point[0],point[1]])
+        elif res["type"]=="GeometryCollection":
+            for item in res["geometries"]:
+                if item["type"]=="Polygon":
+                    for point in item["coordinates"][0]:
+                        _arr.append([point[0],point[1]])
         else:
-            for point in res["coordinates"][0]:
-                _arr.append([point[0],point[1]])
+            if res["coordinates"][0][0]==res["coordinates"][0][-1]:
+                for point in res["coordinates"][0][0:-1]:
+                    _arr.append([point[0],point[1]])
+            else:
+                for point in res["coordinates"][0]:
+                    _arr.append([point[0],point[1]])
         return _arr
-    
+
     def normData(poly,num):
         for ver in poly:
             ver[0]=ver[0]*num
@@ -173,7 +219,7 @@ class geoFunc(object):
         res=[]
         for pt1 in line1:
             for pt2 in line2:
-                if geoFunc.almostEqual(pt1,pt2)==True:
+                if GeoFunc.almostEqual(pt1,pt2)==True:
                     # print("pt1,pt2:",pt1,pt2)
                     res=pt1
         if res!=[]:
@@ -181,18 +227,18 @@ class geoFunc(object):
 
         # 计算是否存在almostContain
         for pt in line1:
-            if geoFunc.almostContain(line2,pt)==True:
+            if GeoFunc.almostContain(line2,pt)==True:
                 return pt
         for pt in line2:
-            if geoFunc.almostContain(line1,pt)==True:
+            if GeoFunc.almostContain(line1,pt)==True:
                 return pt
         return []
     
     ''' 主要用于判断是否有直线重合 过于复杂需要重构'''
     def newLineInter(line1,line2):
-        vec1=geoFunc.lineToVec(line1)
-        vec2=geoFunc.lineToVec(line2)
-        vec12_product=geoFunc.crossProduct(vec1,vec2)
+        vec1=GeoFunc.lineToVec(line1)
+        vec2=GeoFunc.lineToVec(line2)
+        vec12_product=GeoFunc.crossProduct(vec1,vec2)
         Line1=LineString(line1)
         Line2=LineString(line2)
         inter={
@@ -202,29 +248,29 @@ class geoFunc(object):
         # 只有平行才会有直线重叠
         if vec12_product==0:
             # copy避免影响原值
-            new_line1=geoFunc.copyPoly(line1)
-            new_line2=geoFunc.copyPoly(line2)
+            new_line1=GeoFunc.copyPoly(line1)
+            new_line2=GeoFunc.copyPoly(line2)
             if vec1[0]*vec2[0]<0 or vec1[1]*vec2[1]<0:
-                new_line2=geoFunc.reverseLine(new_line2)
+                new_line2=GeoFunc.reverseLine(new_line2)
             # 如果存在顶点相等，则选择其中一个
-            if geoFunc.almostEqual(new_line1[0],new_line2[0]) or geoFunc.almostEqual(new_line1[1],new_line2[1]):
+            if GeoFunc.almostEqual(new_line1[0],new_line2[0]) or GeoFunc.almostEqual(new_line1[1],new_line2[1]):
                 inter["length"]=min(Line1.length,Line2.length)
                 inter["geom_type"]='LineString'
                 return inter
             # 排除只有顶点相交情况
-            if geoFunc.almostEqual(new_line1[0],new_line2[1]):
+            if GeoFunc.almostEqual(new_line1[0],new_line2[1]):
                 inter["length"]=new_line2[1]
                 inter["geom_type"]='Point'
                 return inter
-            if geoFunc.almostEqual(new_line1[1],new_line2[0]):
+            if GeoFunc.almostEqual(new_line1[1],new_line2[0]):
                 inter["length"]=new_line1[1]
                 inter["geom_type"]='Point'
                 return inter
             # 否则判断是否包含
-            line1_contain_line2_pt0=geoFunc.almostContain(new_line1,new_line2[0])
-            line1_contain_line2_pt1=geoFunc.almostContain(new_line1,new_line2[1])
-            line2_contain_line1_pt0=geoFunc.almostContain(new_line2,new_line1[0])
-            line2_contain_line1_pt1=geoFunc.almostContain(new_line2,new_line1[1])
+            line1_contain_line2_pt0=GeoFunc.almostContain(new_line1,new_line2[0])
+            line1_contain_line2_pt1=GeoFunc.almostContain(new_line1,new_line2[1])
+            line2_contain_line1_pt0=GeoFunc.almostContain(new_line2,new_line1[0])
+            line2_contain_line1_pt1=GeoFunc.almostContain(new_line2,new_line1[1])
             # Line1直接包含Line2
             if line1_contain_line2_pt0 and line1_contain_line2_pt1:
                 inter["length"]=Line1.length
@@ -285,11 +331,11 @@ class geoFunc(object):
         '''
         获得延长线的交点
         '''
-        line1_extend=geoFunc.extendLine(line1)
-        line2_extend=geoFunc.extendLine(line2)
+        line1_extend=GeoFunc.extendLine(line1)
+        line2_extend=GeoFunc.extendLine(line2)
         # 排查平行情况
-        k1=geoFunc.getArc(line1_extend)
-        k2=geoFunc.getArc(line2_extend)
+        k1=GeoFunc.getArc(line1_extend)
+        k2=GeoFunc.getArc(line2_extend)
         if abs(k1-k2)<0.01:
             return [line1[1][0],line1[1][1]]
         inter=mapping(LineString(line1_extend).intersection(LineString(line2_extend)))
@@ -313,17 +359,17 @@ class geoFunc(object):
         # 计算直线平移
         for i in range(len(poly)):
             line=[extend_poly[i],extend_poly[i+1]]
-            new_line=geoFunc.slideOutLine(line,Poly,change_len)
+            new_line=GeoFunc.slideOutLine(line,Poly,change_len)
             new_edges.append(new_line)
         
         # 计算直线延长线
         new_poly=[]
         new_edges.append(new_edges[0])
         for i in range(len(new_edges)-1):
-            inter=geoFunc.extendInter(new_edges[i],new_edges[i+1])
+            inter=GeoFunc.extendInter(new_edges[i],new_edges[i+1])
             new_poly.append(inter)
         
-        geoFunc.twoDec(new_poly) 
+        GeoFunc.twoDec(new_poly) 
 
         return new_poly
 
@@ -379,7 +425,7 @@ class geoFunc(object):
             else:
                 return dis1,[line_s_x-point_x,line_s_y-point_y]
         else:
-            pt=geoFunc.getPt(inter)
+            pt=GeoFunc.getPt(inter)
             dis=math.pow((point_x-pt[0])*(point_x-pt[0])+(point_y-pt[1])*(point_y-pt[1]), 0.5)
             return dis,[pt[0]-point[0],pt[1]-point[1]]
 
@@ -401,7 +447,7 @@ class geoFunc(object):
         return [round(pt[0],num),round(pt[1],num)]
     
     def linePrecisionChange(line,num):
-        return [geoFunc.pointPrecisionChange(line[0],num),geoFunc.pointPrecisionChange(line[1],num)]
+        return [GeoFunc.pointPrecisionChange(line[0],num),GeoFunc.pointPrecisionChange(line[1],num)]
     
     def lineToVec(edge):
         return [edge[1][0]-edge[0][0],edge[1][1]-edge[0][1]]
@@ -424,3 +470,13 @@ class geoFunc(object):
         else:
             right=True 
         return right,left,parallel
+
+
+    def getSlideLine(line,x,y):
+        new_line=[]
+        for pt in line:
+            new_line.append([pt[0]+x,pt[1]+y])
+        return new_line
+
+    def getCentroid(poly):
+        return GeoFunc.getPt(Polygon(poly).centroid)
