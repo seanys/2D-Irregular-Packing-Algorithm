@@ -16,7 +16,7 @@ Yang is working in [Dr. Xiaolei Wang](https://scholar.google.com/citations?user=
 
 EURO Dataset：https://www.euro-online.org/websites/esicup/data-sets/#1535972088237-bbcb74e3-b507
 
-Data sets are processed to csv in folder [data](data). Use pandas and json loads. 
+Data sets have been processed to csv in folder [data](data). 
 
 ```python
 import pandas as pd
@@ -34,7 +34,7 @@ print(all_polys)
 
 **genetic_algorithm.py**: A 2-exchange heuristic for nesting problems 2002
 
-**nfp_test.py**: Complete and robust no-fit polygon generation for the irregular stock cutting problem
+**nfp_test.py**: Complete and robust no-fit polygon generation for the irregular stock cutting problem. 
 
 **Cuckoo_search.py**: A new approach for sheet nesting problem using guided cuckoo search and pairwise clustering
 
