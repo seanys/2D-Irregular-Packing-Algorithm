@@ -1,0 +1,314 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		148A296024A6674F0033BB88 /* old_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148A295F24A6674F0033BB88 /* old_main.cpp */; };
+		14BE2F892444ABB00049BA76 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14BE2F882444ABB00049BA76 /* main.cpp */; };
+		14BE2F9F2445B0C80049BA76 /* data_assistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14BE2F9E2445B0C80049BA76 /* data_assistant.cpp */; };
+		14BE2FA12445B0D80049BA76 /* plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14BE2FA02445B0D80049BA76 /* plot.cpp */; };
+		14FFBA3D2445D336001C99D4 /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBA3C2445D336001C99D4 /* geometry.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		14BE2F832444ABB00049BA76 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1426104E244AC16D00A2440D /* data_assistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = data_assistant.hpp; sourceTree = "<group>"; };
+		148A295F24A6674F0033BB88 /* old_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = old_main.cpp; sourceTree = "<group>"; };
+		14BE2F852444ABB00049BA76 /* Nesting Problem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Nesting Problem"; sourceTree = BUILT_PRODUCTS_DIR; };
+		14BE2F882444ABB00049BA76 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		14BE2F9E2445B0C80049BA76 /* data_assistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = data_assistant.cpp; sourceTree = "<group>"; };
+		14BE2FA02445B0D80049BA76 /* plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plot.cpp; sourceTree = "<group>"; };
+		14FFBA3C2445D336001C99D4 /* geometry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geometry.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		14BE2F822444ABB00049BA76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14BE2F7C2444ABB00049BA76 = {
+			isa = PBXGroup;
+			children = (
+				14BE2F872444ABB00049BA76 /* Nesting Problem */,
+				14BE2F862444ABB00049BA76 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		14BE2F862444ABB00049BA76 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14BE2F852444ABB00049BA76 /* Nesting Problem */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		14BE2F872444ABB00049BA76 /* Nesting Problem */ = {
+			isa = PBXGroup;
+			children = (
+				1426104E244AC16D00A2440D /* data_assistant.hpp */,
+				14BE2FA02445B0D80049BA76 /* plot.cpp */,
+				14BE2F9E2445B0C80049BA76 /* data_assistant.cpp */,
+				14BE2F882444ABB00049BA76 /* main.cpp */,
+				14FFBA3C2445D336001C99D4 /* geometry.cpp */,
+				148A295F24A6674F0033BB88 /* old_main.cpp */,
+			);
+			path = "Nesting Problem";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		14BE2F842444ABB00049BA76 /* Nesting Problem */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14BE2F8C2444ABB00049BA76 /* Build configuration list for PBXNativeTarget "Nesting Problem" */;
+			buildPhases = (
+				14BE2F812444ABB00049BA76 /* Sources */,
+				14BE2F822444ABB00049BA76 /* Frameworks */,
+				14BE2F832444ABB00049BA76 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Nesting Problem";
+			productName = "Nesting Problem";
+			productReference = 14BE2F852444ABB00049BA76 /* Nesting Problem */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14BE2F7D2444ABB00049BA76 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Tongji SEM";
+				TargetAttributes = {
+					14BE2F842444ABB00049BA76 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 14BE2F802444ABB00049BA76 /* Build configuration list for PBXProject "Nesting Problem" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 14BE2F7C2444ABB00049BA76;
+			productRefGroup = 14BE2F862444ABB00049BA76 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				14BE2F842444ABB00049BA76 /* Nesting Problem */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		14BE2F812444ABB00049BA76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				148A296024A6674F0033BB88 /* old_main.cpp in Sources */,
+				14BE2F892444ABB00049BA76 /* main.cpp in Sources */,
+				14FFBA3D2445D336001C99D4 /* geometry.cpp in Sources */,
+				14BE2F9F2445B0C80049BA76 /* data_assistant.cpp in Sources */,
+				14BE2FA12445B0D80049BA76 /* plot.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		14BE2F8A2444ABB00049BA76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m,
+					"/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/numpy/core/include",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = (
+					/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m,
+					"/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/numpy/core/include",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/;
+			};
+			name = Debug;
+		};
+		14BE2F8B2444ABB00049BA76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m,
+					"/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/numpy/core/include",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = (
+					/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m,
+					"/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/numpy/core/include",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/;
+			};
+			name = Release;
+		};
+		14BE2F8D2444ABB00049BA76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		14BE2F8E2444ABB00049BA76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		14BE2F802444ABB00049BA76 /* Build configuration list for PBXProject "Nesting Problem" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14BE2F8A2444ABB00049BA76 /* Debug */,
+				14BE2F8B2444ABB00049BA76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		14BE2F8C2444ABB00049BA76 /* Build configuration list for PBXNativeTarget "Nesting Problem" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14BE2F8D2444ABB00049BA76 /* Debug */,
+				14BE2F8E2444ABB00049BA76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 14BE2F7D2444ABB00049BA76 /* Project object */;
+}

@@ -1,20 +1,34 @@
 # 2D-Irregular-Packing-Algorithm
 
-## 基础
+**This repository contains algorithms for 2D irregular packing and a simple tutorial to the algorithms. In our last experiments, most of them work well now. We will update the algorithms then that are still unfinished. Welcome to fork and be one of our contributors.**
 
-### 介绍
+## Introduction
 
-Literature Review/Tutorial：[排样问题文献综述/教程（中文）](https://seanys.github.io/2020/03/17/排样问题综述/) 作者 Yang shan 
+Literature Review：[排样问题文献综述/教程（中文）](https://seanys.github.io/2020/03/17/排样问题综述/)  Yang shan 
 
-English Version：https://github.com/seanys/Packing-Algorithm/blob/master/readme_en.md editing
+Author: [Shan Yang](https://github.com/seanys), [Zilu Wang](https://github.com/Prinway) (Department of Science and Managment, Tongji University)
 
-Author: Yang Shan, Wang Zilu (Department of Science and Managment, Tongji University)
+Email: tjyangshan@gmail.com, prinway1226@gmail.com
 
-### 数据库
+Yang is working in [Dr. Xiaolei Wang](https://scholar.google.com/citations?user=EN1lJkoAAAAJ&hl=zh-CN)'s laboratory on optimization problems in urban transportation. Wang is working in [Dr. Zhaolin Hu](scholar.google.com/citations?user=AOlc1mMAAAAJ&hl=en)'s laboratory on random optimization and simulation. Our work in 2D irregular packing is encouraged by [Dr. Zhe Liang](https://sem.tongji.edu.cn/semch/15381.html) in our department. Welcome to chat with us on these topics. 
+
+## Dataset
 
 EURO Dataset：https://www.euro-online.org/websites/esicup/data-sets/#1535972088237-bbcb74e3-b507
 
-### 文件用途
+Data sets are processed to csv in folder [data](data). Use pandas and json loads. 
+
+```python
+import pandas as pd
+import json
+df = pd.read_csv("data/blaz1.csv")
+all_polys = []
+for i in range(df.shape[0]):
+  all_polys.append(df['polygon'][i])
+print(all_polys)
+```
+
+## Alglorithm
 
 heuristic.py: Bottom-Left-Fill、TOPOS（Debug）
 
@@ -24,13 +38,11 @@ nfp_test.py: try no-fit polygon
 
 lp_algorithm.py: compaction and separation algorithm
 
+lp_search.py: A new
 
+C++ Nesting Problem: C++ Version
 
-## 算法实现情况
-
-### 其他版本
-
-C++：https://github.com/seanys/Packing-Algorithm/tree/master/Nesting%20Problem
+## 实现情况 
 
 ### 基础算法
 
@@ -38,7 +50,7 @@ C++：https://github.com/seanys/Packing-Algorithm/tree/master/Nesting%20Problem
 
 形状A固定位置，在B上选择一个参考点比如左下角点P，形状B紧贴着绕A一周，P的轨迹会形成一个形状即NFP，P在NFP上或外部，则该排列可行；如果P点在NFP内，则方案不可行（[图片来源](https://github.com/Jack000/SVGnest)）
 
-<img src="https://camo.githubusercontent.com/1156f6f8323c52dea2981604dd780b02add19e86/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e66702e706e67" alt="img" style="width:50%;" />
+<img src="https://camo.githubusercontent.com/1156f6f8323c52dea2981604dd780b02add19e86/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e66702e706e67" alt="img" width="500px" />
 
 
 
@@ -50,7 +62,7 @@ a. 选择一个形状加入，通过计算inner fit polygon，也就是形状绕
 
 b. 选择能够摆到的最左侧位置，放进去即可 （[图片来源](https://github.com/Jack000/SVGnest)）
 
-<img src="https://camo.githubusercontent.com/f7973d894432676e37c3489c3248c3a31cf3e945/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e6670322e706e67" alt="No Fit Polygon example" style="width:50%;" />
+<img src="https://camo.githubusercontent.com/f7973d894432676e37c3489c3248c3a31cf3e945/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e6670322e706e67" alt="No Fit Polygon example" width="500px"/>
 
 - [x] TOPOS：已经实现，参考论文：
 - [x] GA/SA：两个优化算法优化顺序已经实现
@@ -68,3 +80,6 @@ b. 选择能够摆到的最左侧位置，放进去即可 （[图片来源](http
 - [x] Separation：去除重叠，已经实现
 - [ ] SHAH：基于模拟退火算法和上述两个算法的Hybrid Algorithm，暂时未做
 
+## Reference Paper
+
+Topos 

@@ -8,10 +8,10 @@ import math
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-from nfp import NFP
-from geo_func import geoFunc
-from show import pltFunc
-from gravity_lowest import GravityLowestAlgorithm
+from tools.nfp import NFP
+from tools.geofunc import GeoFunc
+from tools.show import PltFunc
+from tools.packing import PackingUtil
 
 
 class GCS(object):
@@ -60,9 +60,8 @@ class GCS(object):
         ori: 允许旋转的角度
         '''
         cuckoos = []
-        poly = self.polygons[poly_id]
-        GL_Algo = GravityLowestAlgorithm(None)
-        R = GL_Algo.getInnerFitRectangleNew(poly)  # 为当前多边形计算inner-fit矩形
+        poly = self.polygons[poly_id]        
+        R = PackingUtil.getInnerFitRectangle(poly,self.W, self.H)  # 为当前多边形计算inner-fit矩形
         i = 0
         while i < self.n_c:  # 产生初始种群
             c = Cuckoo(R)
@@ -118,9 +117,10 @@ class GCS(object):
             print(bestCuckoo.getF(), bestCuckoo.getXY())
             self.bestF = bestCuckoo.getF()
             for i in range(0, self.n_polys):
-                pltFunc.addPolygon(self.polygons[i])
+                PltFunc.addPolygon(self.polygons[i])
             t = t+1
-            pltFunc.saveFig(str(t))
+            PltFunc.showAll(width=3000,height=3000)
+            # PltFunc.saveFig(str(t))
         return bestCuckoo
 
     def MinimizeOverlap(self, oris, v, o):
@@ -137,7 +137,7 @@ class GCS(object):
             for i in range(n_polys):
                 curPoly = self.polygons[Q[i]]
                 # 记录原始位置
-                top_index = geoFunc.checkTop(curPoly)
+                top_index = GeoFunc.checkTop(curPoly)
                 top = list(curPoly[top_index])
                 F = self.evaluate(Q[i])  # 以后考虑旋转
                 print('F of',Q[i],':',F)
@@ -149,7 +149,7 @@ class GCS(object):
                     print('polygon', Q[i], v_i.getXY())
                 else:
                     # 平移回原位置
-                    geoFunc.slideToPoint(curPoly, curPoly[top_index], top)
+                    GeoFunc.slideToPoint(curPoly, curPoly[top_index], top)
             fitness_new = self.evaluateAll()
             if fitness_new == 0:
                 return it  # 可行解
@@ -242,8 +242,8 @@ class GCS(object):
 
     def showAll(self):
         for i in range(0, self.n_polys):
-            pltFunc.addPolygon(self.polygons[i])
-        pltFunc.showPlt()
+            PltFunc.addPolygon(self.polygons[i])
+        PltFunc.showPlt(width=3000,height=3000)
 
     def updatePenalty(self):
         depth_max = self.depth.max()
@@ -285,9 +285,9 @@ class Cuckoo(object):
         self.y = y
 
     def slidePolytoMe(self, poly):
-        top_index = geoFunc.checkTop(poly)
+        top_index = GeoFunc.checkTop(poly)
         top = poly[top_index]
-        geoFunc.slideToPoint(poly, top, self.getXY())
+        GeoFunc.slideToPoint(poly, top, self.getXY())
 
 
 class Test():
@@ -316,7 +316,7 @@ class Test():
                 ver[0] = ver[0]*num
                 ver[1] = ver[1]*num
         gcs = GCS(polygons)
-        geoFunc.slidePoly(polygons[0], 500, 500)
+        GeoFunc.slidePoly(polygons[0], 500, 500)
         gcs.showAll()
         gcs.GuidedCuckooSearch(1500, 10)
         gcs.showAll()
