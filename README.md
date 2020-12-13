@@ -10,7 +10,7 @@ Author: [Shan Yang](https://github.com/seanys), [Zilu Wang](https://github.com/P
 
 Email: tjyangshan@gmail.com, prinway1226@gmail.com
 
-Yang is working in [Dr. Xiaolei Wang](https://scholar.google.com/citations?user=EN1lJkoAAAAJ&hl=zh-CN)'s laboratory on optimization problems in urban transportation. Wang is working in [Dr. Zhaolin Hu](scholar.google.com/citations?user=AOlc1mMAAAAJ&hl=en)'s laboratory on random optimization and simulation. Our work in 2D irregular packing is encouraged by [Dr. Zhe Liang](https://sem.tongji.edu.cn/semch/15381.html) in our department. Welcome to chat with us on these topics. 
+Yang is working in [Dr. Xiaolei Wang](https://sem.tongji.edu.cn/semch/34528.html)'s laboratory on optimization problems in urban transportation. Wang is working in [Dr. Zhaolin Hu](https://sem.tongji.edu.cn/semch/15347.html)'s laboratory on random optimization and simulation. Our work in 2D irregular packing is encouraged by [Dr. Zhe Liang](https://sem.tongji.edu.cn/semch/15381.html) in our department. Welcome to chat with us on these topics. 
 
 ## Dataset
 
