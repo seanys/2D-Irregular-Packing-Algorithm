@@ -5,8 +5,9 @@ Created on Wed June 10, 2020
 @author: seanys,prinway
 -----------------------------------
 """
-from tools.polygon import PltFunc
-from tools.geo_assistant import GeometryAssistant, OutputFunc
+from tools.show import PltFunc
+from tools.assistant import OutputFunc
+from tools.lp_assistant import GeometryAssistant
 from shapely.geometry import Polygon,Point,mapping,LineString
 import pandas as pd
 import numpy as np
@@ -33,7 +34,7 @@ zfill_num = 5
 
 class LPSearch(object):
     def __init__(self, **kw):
-        self.line_index = 21
+        self.line_index = 0
         self.max_time = 7200
         self.loadKey = False
 
@@ -44,7 +45,8 @@ class LPSearch(object):
 
         self.initialProblem(self.line_index) # 获得全部 
         self.ration_dec, self.ration_inc = 0.04, 0.01
-        self.TEST_MODEL = False
+        self.TEST_MODEL = True
+        print("测试模式（限时60s）:%s"%self.TEST_MODEL)
         
         _str = "初始利用率为：" + str(self.total_area/(self.cur_length*self.width))
         OutputFunc.outputAttention(self.set_name,_str)
@@ -64,6 +66,7 @@ class LPSearch(object):
         search_times = 0
 
         while time.time() - self.start_time < self.max_time:
+            self.showPolys()
             self.updateAllPairPD() # 更新当前所有重叠
             feasible = self.minimizeOverlap() # 开始最小化重叠
             if feasible == True or search_times == 5:
@@ -104,8 +107,7 @@ class LPSearch(object):
                                 or (self.set_name == "marques" and feasible == True and self.total_area/(self.best_length*self.width)) > 0.9145\
                                     or (self.set_name == "fu" and feasible == True and self.total_area/(self.best_length*self.width)) > 0.924:
                         break
-                
-
+        
 
     def minimizeOverlap(self):
         '''最小化某个重叠情况'''
@@ -116,7 +118,7 @@ class LPSearch(object):
             N = 10
         unchange_times,last_pd = 0,0
         while it < N:
-            print("第",it,"轮")
+            # print("第",it,"轮")
             permutation = np.arange(self.polys_num)
             np.random.shuffle(permutation)
             # permutation = [k for k in range(self.polys_num)]

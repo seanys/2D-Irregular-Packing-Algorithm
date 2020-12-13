@@ -1,6 +1,6 @@
 # 2D-Irregular-Packing-Algorithm
 
-**This repository contains algorithms for 2D irregular packing and a simple tutorial to the algorithms. In our last experiments, most of them work well now. We will update the algorithms then that are still unfinished. Welcome to fork and be one of our contributors.**
+**This repository contains algorithms for 2D irregular packing and a simple tutorial to the algorithms. We will update the algorithms then that are still unfinished or have errors. Welcome to fork and be one of our contributors.**
 
 ## Introduction
 
@@ -30,17 +30,29 @@ print(all_polys)
 
 ## Alglorithm
 
-heuristic.py: Bottom-Left-Fill、TOPOS（Debug）
+**Bottom-Left-Fill.py**: A 2-exchange heuristic for nesting problems 2002
 
-sequence.py: genetic algorithm, simulated annealing
+**genetic_algorithm.py**: A 2-exchange heuristic for nesting problems 2002
 
-nfp_test.py: try no-fit polygon
+**nfp_test.py**: Complete and robust no-fit polygon generation for the irregular stock cutting problem
 
-lp_algorithm.py: compaction and separation algorithm
+**Cuckoo_search.py**: A new approach for sheet nesting problem using guided cuckoo search and pairwise clustering
 
-lp_search.py: A new
+**Fast_neighbor_search.py**: 2004 Fast neighborhood search for two- and three-dimensional nesting problems
 
-C++ Nesting Problem: C++ Version
+**simulating_annealing.py**: SA+Bottom left fill
+
+**lp_algorithm.py**: Solving Irregular Strip Packing problems by hybridising simulated annealing and linear programming 2006
+
+**lp_search.py**: A new algorithm proposed by us. https://github.com/seanys/Use-Modified-Penetration-Depth-and-Guided-Search-to-Solve-Nesting-Problem
+
+**C++ Nesting Problem**: C++ Version
+
+Most of them can work
+
+## Tutorial
+
+Editing....
 
 ## 实现情况 
 
@@ -82,4 +94,4 @@ b. 选择能够摆到的最左侧位置，放进去即可 （[图片来源](http
 
 ## Reference Paper
 
-Topos 
+ 

@@ -1,7 +1,6 @@
 '''
 命名规范：类名全部大写、其他函数首字母小写、变量名全部小写
 形状情况：计算NFP、BottomLeftFill等均不能影响原始对象
-算法内容：2012年前几个局部检索的算法
 '''
 from tools.geofunc import GeoFunc
 from tools.data import getData
@@ -37,26 +36,27 @@ class FNS():
 
         self.guidedLocalSearch()
 
-        # while(True):
-            # self.shrink()
-            # self.guidedLocalSearch()
+        for i in range(10):
+            self.shrink()
+            self.guidedLocalSearch()
         
         self.showResult(current=True)
         
     # 获得初始解和判断角度位置  
     def initial(self):
-        pp = BottomLeftFill(self.width,self.cur_polys)
-        self.height = pp.contain_height
+        blf = BottomLeftFill(self.width,self.cur_polys)
+        self.height = blf.length
         self.updatePolyList()
 
     # 收缩宽度，注意cur_polys和poly_list不一样！！！
     def shrink(self):
-        self.new_height=self.height*0.95
+        self.new_height = self.height*0.95
+        print("收缩边界%s" % self.new_height)
         for poly in self.cur_polys:
-            top_index=GeoFunc.checkTop(poly)
-            delta=self.new_height-poly[top_index][1]
+            top_index = GeoFunc.checkTop(poly)
+            delta = self.new_height-poly[top_index][1]
             # 如果有重叠就平移
-            if delta<0:
+            if delta < 0:
                 GeoFunc.slidePoly(poly,0,delta)
         self.updatePolyList()
     
@@ -317,7 +317,7 @@ class FNS():
             print("最大的index更新为:",self.max_miu_index)
 
             search_times=search_times+1
-                
+
     # 计算所有形状和其他形状的 Overlap 以及是否没有重叠
     def updateSearchStatus(self):
         # 计算重叠情况
@@ -457,4 +457,6 @@ class ILSQN():
         pass
 
 if __name__ == "__main__":
-    FNS()
+    index = 6
+    polys = getData(index)
+    FNS(polys)

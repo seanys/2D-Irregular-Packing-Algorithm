@@ -274,7 +274,7 @@ def searchOneLength(polys,poly_status,width,length,_type):
 
 if __name__ == "__main__":
     blf = pd.read_csv("record/blf.csv")
-    index=7
+    index = 7
     polys,poly_status,width=json.loads(blf["polys"][index]),json.loads(blf["poly_status"][index]),int(blf["width"][index])
 
     searchForBest(polys,poly_status,width,628.1533587455999)

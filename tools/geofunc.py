@@ -158,6 +158,12 @@ class GeoFunc(object):
             new_vertex.append(new_point)
         return new_vertex
 
+    @staticmethod
+    def boundsContain(bounds, pt):
+        if pt[0] >= bounds[0] and pt[0] <= bounds[2] and pt[1] >= bounds[1] and pt[1] <= bounds[3]:
+            return True
+        return False
+        
     def slidePoly(poly,x,y):
         for point in poly:
             point[0]=point[0]+x
