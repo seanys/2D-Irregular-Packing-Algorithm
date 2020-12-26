@@ -44,11 +44,11 @@ print(all_polys)
 
 **lp_algorithm.py**: Solving Irregular Strip Packing problems by hybridising simulated annealing and linear programming 2006
 
-**lp_search.py**: A new algorithm proposed by us. https://github.com/seanys/Use-Modified-Penetration-Depth-and-Guided-Search-to-Solve-Nesting-Problem
+**lp_search.py**: A new algorithm proposed by us. https://github.com/seanys/Use-Modified-Penetration-Depth-and-Guided-Search-to-Solve-Nesting-Problem. 
 
 **C++ Nesting Problem**: C++ Version
 
-Most of them can work
+Most of them can work. Very small overlap is allowed in lp_search to avoid endless search. 
 
 ## Tutorial
 
