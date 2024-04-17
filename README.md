@@ -62,7 +62,7 @@ Editing....
 
 形状A固定位置，在B上选择一个参考点比如左下角点P，形状B紧贴着绕A一周，P的轨迹会形成一个形状即NFP，P在NFP上或外部，则该排列可行；如果P点在NFP内，则方案不可行（[图片来源](https://github.com/Jack000/SVGnest)）
 
-<img src="https://camo.githubusercontent.com/1156f6f8323c52dea2981604dd780b02add19e86/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e66702e706e67" alt="img" width="500px" />
+<img src="https://camo.githubusercontent.com/07ba2a67f9b652415287b738d8803967a4a892a90931c0a7925b353c6303add3/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e66702e706e67" alt="img" width="500px" />
 
 
 
@@ -74,7 +74,7 @@ a. 选择一个形状加入，通过计算inner fit polygon，也就是形状绕
 
 b. 选择能够摆到的最左侧位置，放进去即可 （[图片来源](https://github.com/Jack000/SVGnest)）
 
-<img src="https://camo.githubusercontent.com/f7973d894432676e37c3489c3248c3a31cf3e945/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e6670322e706e67" alt="No Fit Polygon example" width="500px"/>
+<img src="https://camo.githubusercontent.com/b2c496983a244c95868f91dde7552aec2002aeed324aa16cb0eafaadd268ff29/687474703a2f2f7376676e6573742e636f6d2f6769746875622f6e6670322e706e67" alt="No Fit Polygon example" width="500px"/>
 
 - [x] TOPOS：已经实现，参考论文：
 - [x] GA/SA：两个优化算法优化顺序已经实现
