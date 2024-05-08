@@ -1,6 +1,6 @@
 # 2D-Irregular-Packing-Algorithm
 
-**This repository contains algorithms for 2D irregular packing and a simple tutorial to the algorithms. We will update the algorithms then that are still unfinished or have errors. Welcome to fork and be one of our contributors.**
+**This repository contains algorithms for 2D irregular packing and a simple tutorial to the algorithms. If you discover any issues with the code, you are welcome to fork the repository and initiate a pull request after you have tested the code. We will review the changes and, upon confirmation, integrate them into the main branch and acknowledge you as one of our contributors.**
 
 ## Introduction
 
